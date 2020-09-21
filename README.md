@@ -4,12 +4,12 @@ A simple shiny app that takes an IOS chat.db/sms.db backup file and renders an h
 ## Requirements
 The follwoing packages need to be install in your R / RStudio environment
 
-shiny
-shinyWidgets
-shinythemes
-dplyr
-DBI
-RSQLite
+- shiny
+- shinyWidgets
+- shinythemes
+- dplyr
+- DBI
+- RSQLite
 
 You can install a package by running a command
 `install.packages("package_name")`
