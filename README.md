@@ -5,7 +5,7 @@ _Unpackaged; Just a source code_
 
 ![Screenshot](https://github.com/minesweeper106/iMessageBrowser_ShinyR/blob/master/screenshot.png)
 
-## Requirements
+## Dependencies
 The following packages need to be install in your R / RStudio environment
 
 - shiny
@@ -25,6 +25,12 @@ You can install a package by running a command
 3. Install any missing packages from the list above
 4. Open app.R
 5. Click _Run app_
+
+*OR*
+
+Assuming that you have all the necessary librarries installed in your R environment, you can simply run this line from your R console:
+
+`shiny::runGitHub('iMessageBrowser_ShinyR', 'minesweeper106')`
 
 ## Input file
 The file you'll need is named `3d0d7e5fb2ce288813306e4d4636395e047a3d28` and resides in a place where your itunes stores local backups. 
