@@ -25,7 +25,7 @@ ui = dashboardPage(
         box(width = 12, title= "Raw data", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov'))
         
     ),
-    controlbar = dashboardControlbar(skin = "dark")
+    controlbar = dashboardControlbar(skin = "dark", skinSelector())
   
 )
 
