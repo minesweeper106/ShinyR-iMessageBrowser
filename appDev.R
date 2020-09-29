@@ -14,19 +14,83 @@ ui = dashboardPage(
         width = 350,
         minified = FALSE,
         fileInput("file","Select backup file", placeholder = "No file selected"),
-        selectInput("contact", 'Select Contact', choices = NULL),
-        textOutput("f")
+        selectInput("contact", 'Select Contact', choices = NULL)
+       
     ),
     body = dashboardBody(
-        box(width = 12,title = "Chat view",id='messageBox',  solidheader = TRUE,  status = "warning", 
-            userMessages(
-              width = 12,
-              status = "danger",
-              id = "messageStream")),
-        box(width = 12, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov'))
+      
+      
+      
+      fluidRow(
+        tabBox(
+          id = "tabset1", height = "250px",
+          tabPanel("Chat View",box(width = NULL,title = "Chat view",id='messageBox',  solidheader = TRUE,  status = "warning", 
+                                   userMessages(
+                                     width = 12,
+                                     status = "danger",
+                                     id = "messageStream"))),
+          tabPanel("Raw Table",box(width = NULL, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov')))
+        ),
+        tabBox(
+          side = "right", height = "250px",
+          selected = "Tab1",
+          tabPanel("Tab1", "Tab content 1"),
+          tabPanel("Profile",  box(
+            title = "Contact",
+            width = 12,
+            status = "primary",
+            boxProfile(
+              image = "https://avatars.dicebear.com/api/bottts/example.svg",
+              title = textOutput("name"),
+              #subtitle = "Software Engineer",
+              bordered = TRUE,
+              boxProfileItem(
+                title = "Number of messages",
+                description = textOutput("f")
+              ),
+              boxProfileItem(
+                title = "Following",
+                description = 543
+              )
+              
+            )
+          ))
+        )
+      ),
+        # box(width = 8,title = "Chat view",id='messageBox',  solidheader = TRUE,  status = "warning", 
+        #     userMessages(
+        #       width = 12,
+        #       status = "danger",
+        #       id = "messageStream")),
+        # box(
+        #   title = "Contact",
+        #   width = 12,
+        #   status = "primary",
+        #   boxProfile(
+        #     image = "https://avatars.dicebear.com/api/bottts/example.svg",
+        #     title = textOutput("name"),
+        #     #subtitle = "Software Engineer",
+        #     bordered = TRUE,
+        #     boxProfileItem(
+        #       title = "Number of messages",
+        #       description = textOutput("f")
+        #     ),
+        #     boxProfileItem(
+        #       title = "Following",
+        #       description = 543
+        #     )
+        #     
+        #   )
+        # ),
+   #     box(width = 8, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov'))
         
     ),
-    controlbar = dashboardControlbar(skin = "dark", skinSelector())
+    controlbar = dashboardControlbar(skin = "dark",br(), controlbarMenu(
+              id = "menu",
+              controlbarItem( "Themes","Change Color theme \n",skinSelector()),
+              controlbarItem( "Tab 2" )
+    ) ),
+    footer= dashboardFooter(left="By minesweeper106")
   
 )
 
@@ -64,6 +128,7 @@ server <- function(input, output, session) {
       req(input$contact)
       a<-getDB(file=input$file$datapath)
       parsed <- parser(a, input$contact)
+      output$name <- renderText({input$contact})
       
       while (messages_per_contact>0) {
         updateUserMessages("messageStream", 
