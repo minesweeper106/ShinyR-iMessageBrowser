@@ -12,6 +12,7 @@ ui = dashboardPage(
     ),
     sidebar = dashboardSidebar(
         width = 350,
+        minified = FALSE,
         fileInput("file","Select backup file", placeholder = "No file selected"),
         selectInput("contact", 'Select Contact', choices = NULL),
         textOutput("f")
@@ -22,7 +23,7 @@ ui = dashboardPage(
               width = 12,
               status = "danger",
               id = "messageStream")),
-        box(width = 12, title= "Raw data", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov'))
+        box(width = 12, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov'))
         
     ),
     controlbar = dashboardControlbar(skin = "dark", skinSelector())
@@ -30,7 +31,8 @@ ui = dashboardPage(
 )
 
 server <- function(input, output, session) {
-    
+  
+  
     whogen <- reactive({
         req(input$file)
         tabledb<-getDB(file=input$file$datapath)
@@ -44,7 +46,7 @@ server <- function(input, output, session) {
     
     output$ov <- DT::renderDT({
         req(input$file)
-        tabledb<-getDB(file=input$file$datapath)
+        tabledb<-isolate(getDB(file=input$file$datapath))
         colnames(tabledb)<-c("Epoch","Date", "Message","sent(1)/received(0)", "Contact")
         tabledb[2:5]
         })
@@ -52,10 +54,10 @@ server <- function(input, output, session) {
         
     
     # output$test<-renderUI({
-    #   userMessages(
+    #  tagList( userMessages(
     #   width = 12,
     #   status = "danger",
-    #   id = "messageStream2")})
+    #   id = "messageStream2"))})
     # 
     observeEvent(input$contact,{
       req(input$file)
@@ -63,9 +65,12 @@ server <- function(input, output, session) {
       a<-getDB(file=input$file$datapath)
       parsed <- parser(a, input$contact)
       
-      #for (j in f) (updateUserMessages("messageStream", 
-      #                   action = "remove", index = j ))
-      
+      while (messages_per_contact>0) {
+        updateUserMessages("messageStream", 
+                         action = "remove", index = messages_per_contact )
+        messages_per_contact<-messages_per_contact-1
+        }
+      f<-0
       for (i in 1:nrow(parsed)) {
         
         if (parsed$sent[i] == 0) 
@@ -83,15 +88,15 @@ server <- function(input, output, session) {
                            action = "add", 
                            content = list(
                              author = parsed$who[i],
-                             date = as.character(parsed$date[i]),
+                             date = as.character(parsed$xdate[i]),
                              image  = avatar_r,
                              type = model,
                              text = parsed$text[i]
                            ))
-        f<-i+1
+        f<-f+1
       }
       output$f<-renderText({f})
-      return(f)
+      assign("messages_per_contact", f, envir = .GlobalEnv)
      
     })
 }
