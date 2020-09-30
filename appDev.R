@@ -10,90 +10,74 @@ ui = dashboardPage(
         titleWidth = 350
        
     ),
+#------------------Sidebar    
     sidebar = dashboardSidebar(
         width = 350,
         minified = FALSE,
+        
         fileInput("file","Select backup file", placeholder = "No file selected"),
+        hr(),
+       # box(),
         selectInput("contact", 'Select Contact', choices = NULL)
        
     ),
-    body = dashboardBody(
+#-----------------Body    
+body = dashboardBody(
       
       
       
-      fluidRow(
-        tabBox(
-          id = "tabset1", height = "250px",
-          tabPanel("Chat View",box(width = NULL,title = "Chat view",id='messageBox',  solidheader = TRUE,  status = "warning", 
-                                   userMessages(
-                                     width = 12,
-                                     status = "danger",
-                                     id = "messageStream"))),
-          tabPanel("Raw Table",box(width = NULL, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov')))
-        ),
-        tabBox(
-          side = "right", height = "250px",
-          selected = "Tab1",
-          tabPanel("Tab1", "Tab content 1"),
-          tabPanel("Profile",  box(
-            title = "Contact",
-            width = 12,
-            status = "primary",
-            boxProfile(
-              image = "https://avatars.dicebear.com/api/bottts/example.svg",
-              title = textOutput("name"),
-              #subtitle = "Software Engineer",
-              bordered = TRUE,
-              boxProfileItem(
-                title = "Number of messages",
-                description = textOutput("f")
-              ),
-              boxProfileItem(
-                title = "Following",
-                description = 543
-              )
-              
-            )
-          ))
-        )
-      ),
-        # box(width = 8,title = "Chat view",id='messageBox',  solidheader = TRUE,  status = "warning", 
-        #     userMessages(
-        #       width = 12,
-        #       status = "danger",
-        #       id = "messageStream")),
-        # box(
-        #   title = "Contact",
-        #   width = 12,
-        #   status = "primary",
-        #   boxProfile(
-        #     image = "https://avatars.dicebear.com/api/bottts/example.svg",
-        #     title = textOutput("name"),
-        #     #subtitle = "Software Engineer",
-        #     bordered = TRUE,
-        #     boxProfileItem(
-        #       title = "Number of messages",
-        #       description = textOutput("f")
-        #     ),
-        #     boxProfileItem(
-        #       title = "Following",
-        #       description = 543
-        #     )
-        #     
-        #   )
-        # ),
-   #     box(width = 8, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov'))
+      
+  tabBox(width=12,
+          id = "tabsetView",
+          tabPanel("Chat View", 
+                   fluidRow(  
+                     box(title = "Chat view",id='messageBox',  solidheader = FALSE,  status = "warning", 
+                                    userMessages(
+                                      width = NULL,
+                                      status = "danger",
+                                      id = "messageStream")),
+                    box(title = "Contact", id='profile',
+                                    boxProfile(
+                                      image = "https://avatars.dicebear.com/api/bottts/example.svg",
+                                      title = textOutput("name"),
+                                        #subtitle = "Software Engineer",
+                                        bordered = TRUE,
+                                        boxProfileItem(
+                                        title = "Number of messages",
+                                        description = textOutput("f")
+                                          ),
+                                        boxProfileItem(
+                                        title = "Other",
+                                        description = "N/a"
+                                                      )
+                                        )
+                          )
+                   
+                        )
+          ),
+          tabPanel("Raw Table", 
+                   box(width = NULL, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov')))
+    )
         
-    ),
-    controlbar = dashboardControlbar(skin = "dark",br(), controlbarMenu(
+        
+        
+        
+),
+
+    controlbar = dashboardControlbar(skin = "dark", controlbarMenu(
               id = "menu",
-              controlbarItem( "Themes","Change Color theme \n",skinSelector()),
+              controlbarItem( "Themes","Change Color theme",br(),hr()),
               controlbarItem( "Tab 2" )
     ) ),
-    footer= dashboardFooter(left="By minesweeper106")
+    footer= dashboardFooter(left="By minesweeper106",
+                            right= socialButton(href = "https://github.com/minesweeper106",icon = icon("github"))
+    )
   
 )
-
+#------------------------------------
+#-----------SERVER-------------------
+#------------------------------------
+#------------------------------------
 server <- function(input, output, session) {
   
   
