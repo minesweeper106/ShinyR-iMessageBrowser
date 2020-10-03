@@ -17,8 +17,8 @@ ui = dashboardPage(
         
         fileInput("file","Select backup file", placeholder = "No file selected"),
         hr(),
-       # box(),
         selectInput("contact", 'Select Contact', choices = NULL)
+       
        
     ),
 #-----------------Body    
@@ -31,7 +31,7 @@ body = dashboardBody(
           id = "tabsetView",
           tabPanel("Chat View", 
                    fluidRow(  
-                     box(title = "Chat view",id='messageBox',  solidheader = FALSE,  status = "warning", 
+                     box(title = "Chat view",id='messageBox', collapsible = TRUE, collapsed = TRUE,  solidheader = FALSE,  status = "warning", 
                                     userMessages(
                                       width = NULL,
                                       status = "danger",
@@ -40,7 +40,6 @@ body = dashboardBody(
                                     boxProfile(
                                       image = "https://avatars.dicebear.com/api/bottts/example.svg",
                                       title = textOutput("name"),
-                                        #subtitle = "Software Engineer",
                                         bordered = TRUE,
                                         boxProfileItem(
                                         title = "Number of messages",
@@ -63,7 +62,7 @@ body = dashboardBody(
         
         
 ),
-
+#-----------Right Panel
     controlbar = dashboardControlbar(skin = "dark", controlbarMenu(
               id = "menu",
               controlbarItem( "Themes","Change Color theme",br(),hr()),
@@ -98,15 +97,7 @@ server <- function(input, output, session) {
         colnames(tabledb)<-c("Epoch","Date", "Message","sent(1)/received(0)", "Contact")
         tabledb[2:5]
         })
-    
-        
-    
-    # output$test<-renderUI({
-    #  tagList( userMessages(
-    #   width = 12,
-    #   status = "danger",
-    #   id = "messageStream2"))})
-    # 
+
     observeEvent(input$contact,{
       req(input$file)
       req(input$contact)
