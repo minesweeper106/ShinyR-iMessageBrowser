@@ -36,7 +36,7 @@ body = dashboardBody(
                                       width = NULL,
                                       status = "danger",
                                       id = "messageStream")),
-                    box(title = "Contact", id='profile',
+                    box(title = "Contact", id='profile', collapsible = TRUE, collapsed = TRUE,
                                     boxProfile(
                                       image = "https://avatars.dicebear.com/api/bottts/example.svg",
                                       title = textOutput("name"),
@@ -89,7 +89,21 @@ server <- function(input, output, session) {
         choices <- whogen()
         updateSelectInput(session, "contact", choices = choices)
     })
-   
+    #Uncollapsing views on input
+    observeEvent(input$file,{ 
+      updateBox("messageBox", 
+                action = "toggle"
+      )        
+      updateBox("messageBox", 
+                action = "update",
+                options = list(collapsible=FALSE )
+      )
+      updateBox("profile", 
+                action = "toggle"
+      )   
+      
+      
+      })
     
     output$ov <- DT::renderDT({
         req(input$file)
