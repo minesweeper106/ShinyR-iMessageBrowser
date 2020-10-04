@@ -89,21 +89,21 @@ server <- function(input, output, session) {
         choices <- whogen()
         updateSelectInput(session, "contact", choices = choices)
     })
-    #Uncollapsing views on input
-    observeEvent(input$file,{ 
-      updateBox("messageBox", 
-                action = "toggle"
-      )        
-      updateBox("messageBox", 
-                action = "update",
-                options = list(collapsible=FALSE )
-      )
-      updateBox("profile", 
-                action = "toggle"
-      )   
-      
-      
-      })
+    # #Uncollapsing views on input
+    # observeEvent(input$file,{ 
+    #   updateBox("messageBox", 
+    #             action = "toggle"
+    #   )        
+    #   updateBox("messageBox", 
+    #             action = "update",
+    #             options = list(collapsible=FALSE )
+    #   )
+    #   updateBox("profile", 
+    #             action = "toggle"
+    #   )   
+    #   
+    #   
+    #   })
     
     output$ov <- DT::renderDT({
         req(input$file)
@@ -118,7 +118,6 @@ server <- function(input, output, session) {
       a<-getDB(file=input$file$datapath)
       parsed <- parser(a, input$contact)
       output$name <- renderText({input$contact})
-      
       while (messages_per_contact>0) {
         updateUserMessages("messageStream", 
                          action = "remove", index = messages_per_contact )
@@ -150,6 +149,10 @@ server <- function(input, output, session) {
         f<-f+1
       }
       output$f<-renderText({f})
+      if (input$messageBox$collapsed) {updateBox("messageBox", 
+                action = "toggle" ) }
+      if (input$profile$collapsed) {updateBox("profile", 
+                action = "toggle" ) }
       assign("messages_per_contact", f, envir = .GlobalEnv)
      
     })
