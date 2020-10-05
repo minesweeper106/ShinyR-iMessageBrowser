@@ -3,7 +3,7 @@ A simple shiny app that takes an IOS chat.db/sms.db backup file and renders an h
 
 _Unpackaged; Just a source code_
 
-![Screenshot](https://github.com/minesweeper106/iMessageBrowser_ShinyR/blob/master/screenshot.png)
+![Screenshot](https://github.com/minesweeper106/iMessageBrowser_ShinyR/blob/master/Screenshot.jpg)
 
 ## Dependencies
 The following packages need to be installed in your R / RStudio environment
