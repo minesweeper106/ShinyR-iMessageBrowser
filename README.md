@@ -1,4 +1,4 @@
-# iMessageBrowser_ShinyR
+# iMessageBrowser
 A simple shiny app that takes an IOS chat.db/sms.db backup file and renders an html chat view.
 
 _Unpackaged; Just a source code_
@@ -9,7 +9,6 @@ _Unpackaged; Just a source code_
 The following packages need to be installed in your R / RStudio environment
 
 - shiny
-- shinyWidgets
 - shinythemes
 - dplyr
 - DBI
