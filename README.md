@@ -28,7 +28,7 @@ You can install a package by running a command
 
 Assuming that you have all the necessary libraries installed in your R environment, you can simply run this line from your R console:
 
-`shiny::runGitHub('iMessageBrowser_ShinyR', 'minesweeper106')`
+`shiny::runGitHub('ShinyR-iMessageBrowser', 'minesweeper106')`
 
 ## Input file
 The file you'll need is named `3d0d7e5fb2ce288813306e4d4636395e047a3d28` and it's stored somewhere in the backup folder created by ITunes.
