@@ -5,13 +5,15 @@ source("global.R")
 
 #------------------------------UI
 ui <- fluidPage(
-        fluidRow(navbarPage("SMS Backup Browser - ios v0.01", collapsible = TRUE, inverse = TRUE)),
-                            setBackgroundColor(
-                                                color = c("#b6c5cf", "#020024"),
-                                                gradient = "radial",
-                                                direction = c("top", "left")),
-    
-    
+    theme = shinytheme("cosmo"),
+    tags$h1("iMessageBrowser"),
+    tags$hr(),
+    tags$footer(title="Footer", align = "left", style = "position:fixed;
+  bottom:0;
+  right:0;
+  left:0;
+  padding:10px;
+  box-sizing:border-box;", p(class="float-left","by minesweeper106")),
         sidebarLayout(
         
             sidebarPanel(
@@ -21,22 +23,13 @@ ui <- fluidPage(
                 
           
             ),
-            mainPanel(
-                tabsetPanel(
-                    tabPanel('Chat View',bootstrapPage(
-                        
-                        includeCSS("chat2.css"),
+            mainPanel(bootstrapPage(
                         htmlOutput("nex")
-                    )
-                    ),
-                    tabPanel('Search',
-                             
-                             DT::DTOutput('ov')
-                             
-                             )
                     
               
-                ))))
+                ))
+            
+            ))
 
 #------------------------------SRV
 server <- function(input, output, session) {
@@ -50,17 +43,7 @@ server <- function(input, output, session) {
         choices <- whogen()
         updateSelectInput(session, "contact", choices = choices)
     })
-   
-    
-    output$ov <- DT::renderDT({
-        req(input$file)
-        tabledb<-getDB(file=input$file$datapath)
-        colnames(tabledb)<-c("Epoch","Date", "Message","sent(1)/received(0)", "Contact")
-        tabledb[2:5]
-        })
-    
 
-    
     output$nex <- renderText({
         req(input$file)
         req(input$contact)
