@@ -1,6 +1,6 @@
 #Lib dependencies
 library(shiny)
-library(shinyWidgets)
+#library(shinyWidgets)
 library(shinythemes)
 library(dplyr)
 library(DBI)
