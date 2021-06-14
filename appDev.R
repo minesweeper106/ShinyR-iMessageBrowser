@@ -132,7 +132,7 @@ server <- function(input, output, session) {
           avatar_r<-"https://avatars.dicebear.com/api/bottts/example.svg"
         } else {
           model<-"sent"
-          avatar_r<-"https://media-exp1.licdn.com/dms/image/C4D03AQEKIBvmAlQifw/profile-displayphoto-shrink_100_100/0?e=1606953600&v=beta&t=Sf2xc9Q61iZnZdnFpNQP9-RS6VMCjckt7zNnIaeWDIg"
+          avatar_r<-"https://avatars.dicebear.com/api/initials/Łu%20Ber.svg?r=50&backgroundColors[]=teal"
         }
       
         

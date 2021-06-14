@@ -19,3 +19,4 @@ options(shiny.maxRequestSize = 20 * 1024^2)
 
 #Global Vars
 messages_per_contact<-0
+
