@@ -13,6 +13,7 @@ ui = dashboardPage(
 #------------------Sidebar-------------------    
     sidebar = dashboardSidebar(
         width = 350,
+        skin = "light",
         minified = FALSE,
         
         fileInput("file","Select backup file", placeholder = "No file selected"),
