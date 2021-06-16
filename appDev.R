@@ -110,7 +110,7 @@ server <- function(input, output, session) {
                            action = "add", 
                            content = list(
                              author = parsed$who[i],
-                             date = as.character(parsed$xdate[i]),
+                             date = as.character(parsed$epoch[i]),
                              image  = avatar_r,
                              type = model,
                              text = parsed$text[i]
