@@ -10,13 +10,13 @@ parser <- function(data,id=NULL, dateStart=NULL, dateEnd=NULL) {
   if(!is.null(dateStart)) {
       
    message <- data %>%
-    filter(datex>=dateStart) %>%
+    filter(epoch>=dateStart) %>%
     arrange(desc(date)) 
        }
   if(!is.null(dateEnd)) {
    
     message <- data %>%
-      filter(datex <= dateEnd) %>%
+      filter(epoch <= dateEnd) %>%
       arrange(desc(date))
   }
  message
