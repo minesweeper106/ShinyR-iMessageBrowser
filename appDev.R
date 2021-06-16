@@ -10,7 +10,7 @@ ui = dashboardPage(
         titleWidth = 350
        
     ),
-#------------------Sidebar    
+#------------------Sidebar-------------------    
     sidebar = dashboardSidebar(
         width = 350,
         minified = FALSE,
@@ -21,7 +21,7 @@ ui = dashboardPage(
        
        
     ),
-#-----------------Body    
+#-----------------Body-------------------    
 body = dashboardBody(
       
       
@@ -57,26 +57,10 @@ body = dashboardBody(
           tabPanel("Raw Table", 
                    box(width = NULL, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov')))
     )
-        
-        
-        
-        
 ),
-#-----------Right Panel
-    controlbar = dashboardControlbar(skin = "dark", controlbarMenu(
-              id = "menu",
-              controlbarItem( "Themes","Change Color theme",br(),hr()),
-              controlbarItem( "Tab 2" )
-    ) ),
-    footer= dashboardFooter(left="By minesweeper106",
-                            right= socialButton(href = "https://github.com/minesweeper106",icon = icon("github"))
-    )
-  
 )
-#------------------------------------
 #-----------SERVER-------------------
-#------------------------------------
-#------------------------------------
+
 server <- function(input, output, session) {
   
   
@@ -89,21 +73,6 @@ server <- function(input, output, session) {
         choices <- whogen()
         updateSelectInput(session, "contact", choices = choices)
     })
-    # #Uncollapsing views on input
-    # observeEvent(input$file,{ 
-    #   updateBox("messageBox", 
-    #             action = "toggle"
-    #   )        
-    #   updateBox("messageBox", 
-    #             action = "update",
-    #             options = list(collapsible=FALSE )
-    #   )
-    #   updateBox("profile", 
-    #             action = "toggle"
-    #   )   
-    #   
-    #   
-    #   })
     
     output$ov <- DT::renderDT({
         req(input$file)

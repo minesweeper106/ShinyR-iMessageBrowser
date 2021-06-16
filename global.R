@@ -1,9 +1,8 @@
 #Lib dependencies
 library(shiny)
 library(shinyWidgets)
-library(shinythemes)
-library(shinydashboard)
-library(shinydashboardPlus)
+#library(shinythemes)
+library(bs4Dash)
 library(dplyr)
 library(DBI)
 library(RSQLite)
