@@ -38,7 +38,7 @@ body = dashboardBody(
                                       id = "messageStream")),
                     box(title = "Contact", id='profile', collapsible = TRUE, collapsed = TRUE,
                                     boxProfile(
-                                      image = "https://avatars.dicebear.com/api/bottts/example.svg",
+                                      image = "https://api.dicebear.com/9.x/bottts/svg",
                                       title = textOutput("name"),
                                         bordered = TRUE,
                                         boxProfileItem(
@@ -129,7 +129,7 @@ server <- function(input, output, session) {
         if (parsed$sent[i] == 0) 
         {
           model<-"received"
-          avatar_r<-"https://avatars.dicebear.com/api/bottts/example.svg"
+          avatar_r<-"https://api.dicebear.com/9.x/bottts/svg"
         } else {
           model<-"sent"
           avatar_r<-"https://media-exp1.licdn.com/dms/image/C4D03AQEKIBvmAlQifw/profile-displayphoto-shrink_100_100/0?e=1606953600&v=beta&t=Sf2xc9Q61iZnZdnFpNQP9-RS6VMCjckt7zNnIaeWDIg"

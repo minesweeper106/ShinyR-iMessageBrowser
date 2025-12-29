@@ -1,5 +1,8 @@
-
 message item app.R
 new_generate.R
 .Rhistory
 .RData
+.Rproj.user
+sms_ja_2016.db
+parser2.R
+ShinyR-iMessageBrowser.Rproj
