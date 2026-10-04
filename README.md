@@ -25,7 +25,7 @@ Everything runs on your own machine. Files you select are read locally and nothi
 - **No attachments**: photos, videos and files are not shown or exported; such messages appear as empty / "(attachment or empty message)".
 - **No group chats as such**: messages without a single contact handle are lumped together under "Unknown / group". Participants and group names are not resolved.
 - **Read-only**: it never modifies your databases, sends messages or deletes anything.
-- **No encrypted backups**: if your iPhone backup is encrypted, the files are unreadable. Make an unencrypted backup, or decrypt it with another tool first.
+- **No encrypted backups**: if your iPhone backup is encrypted, the files are unreadable. Make an unencrypted backup, or decrypt the files first with another tool (see [Encrypted backups](#encrypted-backups)).
 - **iPhone Address Book format only**: the Address Book file must be the iOS `AddressBook.sqlitedb`. The Mac `AddressBook-v22.abcddb` uses a different layout and is not supported.
 - **No reactions, edits, read receipts or message threading.**
 - **Text only**: on some newer macOS versions message text can be stored in a form this app does not decode, so some messages from a Mac `chat.db` may appear empty. iPhone backups are the primary use case.
@@ -74,6 +74,21 @@ On recent macOS versions, Terminal (or whatever app you use to read these files)
 The message database is at `/private/var/mobile/Library/SMS/sms.db` and contacts are at `/private/var/mobile/Library/AddressBook/AddressBook.sqlitedb`.
 
 All of these are SQLite databases, so you can also inspect them with `sqlite3` or DB Browser for SQLite.
+
+### Encrypted backups
+
+iMessage Browser cannot decrypt encrypted iPhone backups. The files inside are scrambled, and without decryption `sms.db` will fail to open. You have three options:
+
+1. **Make an unencrypted backup.** In Finder (macOS) or iTunes / Apple Devices (Windows), untick *Encrypt local backup* and create a new backup. Your password-protected backup is not changed. Note that an unencrypted backup does not include some data (e.g. saved passwords, Health data), which does not matter for messages.
+2. **Decrypt the backup you have, using another tool**, then load the resulting `sms.db` (and `AddressBook.sqlitedb`) here as usual. You need the backup password. Examples of tools that can do this:
+   - [`iphone_backup_decrypt`](https://github.com/jsharkey13/iphone_backup_decrypt) (Python, open source)
+   - [`iOSbackup`](https://github.com/avibrazil/iOSbackup) (Python, open source)
+   - commercial apps such as iMazing
+
+   These are third-party tools. This project does not endorse or test them, so check their documentation and work on a copy of your backup.
+3. **Use a Mac's live `chat.db`** (see above), which is not encrypted at the file level.
+
+Keep decrypted files somewhere safe and delete them when you are done: they contain your messages in plain form.
 
 ### Tip
 
