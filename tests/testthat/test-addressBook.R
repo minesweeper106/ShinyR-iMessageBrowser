@@ -1,11 +1,11 @@
 make_ab_fixture <- function() {
   f <- tempfile(fileext = ".db")
   con <- dbConnect(SQLite(), f)
-  dbExecute(con, "CREATE TABLE ABPerson (ROWID INTEGER PRIMARY KEY, First TEXT, Last TEXT, Organization TEXT)")
-  dbExecute(con, "CREATE TABLE ABMultiValue (UID INTEGER PRIMARY KEY, record_id INTEGER, property INTEGER, value TEXT)")
-  dbExecute(con, "INSERT INTO ABPerson VALUES (1,'Ann','Lee',NULL),(2,'Bob',NULL,NULL),
+  DBI::dbExecute(con, "CREATE TABLE ABPerson (ROWID INTEGER PRIMARY KEY, First TEXT, Last TEXT, Organization TEXT)")
+  DBI::dbExecute(con, "CREATE TABLE ABMultiValue (UID INTEGER PRIMARY KEY, record_id INTEGER, property INTEGER, value TEXT)")
+  DBI::dbExecute(con, "INSERT INTO ABPerson VALUES (1,'Ann','Lee',NULL),(2,'Bob',NULL,NULL),
                   (3,NULL,NULL,'Acme Pizza'),(4,'Cy','Dee',NULL),(5,'Di','Ex',NULL),(6,'Ed','Ex',NULL)")
-  dbExecute(con, "INSERT INTO ABMultiValue (record_id, property, value) VALUES
+  DBI::dbExecute(con, "INSERT INTO ABMultiValue (record_id, property, value) VALUES
     (1,3,'+44 20 7946 0958'),
     (2,4,'Bob@Example.com'),
     (3,3,'+1 (555) 010-9999'),
@@ -14,7 +14,7 @@ make_ab_fixture <- function() {
     (5,3,'0700 111 222'),
     (6,3,'0700-111-222'),
     (1,3,'+44 20 7946 0958')")
-  dbDisconnect(con)
+  DBI::dbDisconnect(con)
   f
 }
 

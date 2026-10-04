@@ -13,9 +13,9 @@ test_that("getDB converts Apple epoch and returns expected columns", {
 test_that("getDB handles legacy dates stored in seconds", {
   f <- make_fixture()
   con <- dbConnect(SQLite(), f)
-  dbExecute(con, "DELETE FROM message")
-  dbExecute(con, "INSERT INTO message VALUES (1, 504203016, 'old', 0, 1)")
-  dbDisconnect(con)
+  DBI::dbExecute(con, "DELETE FROM message")
+  DBI::dbExecute(con, "INSERT INTO message VALUES (1, 504203016, 'old', 0, 1)")
+  DBI::dbDisconnect(con)
   d <- getDB(f)
   expect_equal(d$date, 504203016 + 978307200)
   expect_equal(substr(d$xdate, 1, 4), "2016")

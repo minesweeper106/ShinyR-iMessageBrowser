@@ -1,18 +1,15 @@
 parser <- function(data, id = NULL, dateStart = NULL, dateEnd = NULL) {
-
   message <- data
-
   if (!is.null(id)) {
-    message <- message %>% filter(who == id)
+    message <- message[!is.na(message$who) & message$who == id, , drop = FALSE]
   }
   if (!is.null(dateStart)) {
-    message <- message %>% filter(date >= as.numeric(dateStart))
+    message <- message[!is.na(message$date) & message$date >= as.numeric(dateStart), , drop = FALSE]
   }
   if (!is.null(dateEnd)) {
-    message <- message %>% filter(date <= as.numeric(dateEnd))
+    message <- message[!is.na(message$date) & message$date <= as.numeric(dateEnd), , drop = FALSE]
   }
-
-  message %>% arrange(desc(date))
+  message[order(-message$date), , drop = FALSE]
 }
 
 # Convert the UTC `xdate` strings from getDB() to local time (tz = "" is this

@@ -1,0 +1,28 @@
+Package: imessagebrowser
+Title: Browse iMessage and SMS Backup Databases
+Version: 1.0.0
+Authors@R: person("minesweeper106", role = c("aut", "cre"),
+    email = "k8g7v7yfq8@privaterelay.appleid.com")
+Description: A local 'shiny' app for browsing iMessage and SMS backup
+    databases ('sms.db' from an iPhone backup or 'chat.db' from a Mac). Shows
+    conversations in a chat-style view, supports contact names from an iPhone
+    Address Book, keyword search across all chats, and export of a
+    conversation as a single self-contained HTML file. Everything runs
+    locally.
+License: MIT + file LICENSE
+URL: https://github.com/minesweeper106/ShinyR-iMessageBrowser
+BugReports: https://github.com/minesweeper106/ShinyR-iMessageBrowser/issues
+Depends: R (>= 4.1.0)
+Imports:
+    DBI,
+    htmltools,
+    RSQLite,
+    shiny,
+    shinydashboard,
+    shinydashboardPlus,
+    utils,
+    DT
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8

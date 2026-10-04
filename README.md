@@ -29,7 +29,7 @@ Everything runs on your own machine. Files you select are read locally and nothi
 - **iPhone Address Book format only**: the Address Book file must be the iOS `AddressBook.sqlitedb`. The Mac `AddressBook-v22.abcddb` uses a different layout and is not supported.
 - **No reactions, edits, read receipts or message threading.**
 - **Text only**: on some newer macOS versions message text can be stored in a form this app does not decode, so some messages from a Mac `chat.db` may appear empty. iPhone backups are the primary use case.
-- **20 MB upload limit** per file (set in `global.R`). Larger databases need the limit raised (`shiny.maxRequestSize`).
+- **20 MB upload limit** per file (set in `run_app()`, `R/run_app.R`). Larger databases need the limit raised (`shiny.maxRequestSize`).
 - **Not a backup or forensic tool**: no deleted-message recovery, no integrity checks.
 
 ## Getting the files
@@ -81,21 +81,29 @@ Copy the hashed files out of the backup to somewhere convenient and give them re
 
 ## Installation
 
-Requires [R](https://www.r-project.org/). Packages are pinned with [renv](https://rstudio.github.io/renv/).
+Requires [R](https://www.r-project.org/) 4.1 or newer.
 
 ```r
-# in the project folder
-renv::restore()
+install.packages("remotes")
+remotes::install_github("minesweeper106/ShinyR-iMessageBrowser")
 ```
 
-Main dependencies: `shiny`, `shinydashboard`, `shinydashboardPlus`, `dplyr`, `DBI`, `RSQLite`, `DT`, `htmltools`.
+Or install a downloaded release file (`imessagebrowser_1.0.0.tar.gz` from the GitHub Releases page):
+
+```r
+install.packages("imessagebrowser_1.0.0.tar.gz", repos = NULL, type = "source")
+```
+
+### Double-click launchers
+
+After installing, the `launch/` folder has `iMessageBrowser.command` (macOS) and `iMessageBrowser.bat` (Windows) that start the app without opening R. On macOS you may need to right-click, then Open, the first time. They need `Rscript` to be on your PATH.
 
 ## Usage
 
-1. Start the app from the project folder:
+1. Start the app:
 
    ```r
-   shiny::runApp()
+   imessagebrowser::run_app()
    ```
 
 2. In the sidebar, click **Select backup file** and choose your message database (`sms.db` / `chat.db`).
@@ -106,16 +114,26 @@ Main dependencies: `shiny`, `shinydashboard`, `shinydashboardPlus`, `dplyr`, `DB
    - **Export**: **Download HTML** saves the selected conversation (oldest message first) as `chat-<name>.html`.
    - **Search**: type a word or phrase to search all conversations.
 
-## Tests
+## Development
+
+The project is an R package. Packages for development are pinned with [renv](https://rstudio.github.io/renv/) (`renv::restore()`).
 
 ```r
-testthat::test_dir("tests/testthat")
+pkgload::load_all()                 # load the code
+run_app()                           # start the app
+testthat::test_local()              # run the tests
 ```
+
+Build and check: `R CMD build .` then `R CMD check imessagebrowser_1.0.0.tar.gz`.
 
 ## Privacy
 
-Message databases are highly personal. The app runs locally and makes no external requests: the avatars are SVG files bundled in `www/`. Exported HTML files contain your full conversation text, so store and share them with care.
+Message databases are highly personal. The app runs locally and makes no external requests: the avatars are SVG files bundled in `inst/app/www/`. Exported HTML files contain your full conversation text, so store and share them with care.
 
 ## Author
 
 [minesweeper106](https://github.com/minesweeper106)
+
+## Licence
+
+MIT, see `LICENSE.md`.
