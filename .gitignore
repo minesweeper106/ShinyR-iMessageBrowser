@@ -6,3 +6,4 @@ new_generate.R
 sms_ja_2016.db
 parser2.R
 ShinyR-iMessageBrowser.Rproj
+.DS_Store
