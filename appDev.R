@@ -80,10 +80,12 @@ body = dashboardBody(
 server <- function(input, output, session) {
   
   
-    whogen <- reactive({
+    db <- reactive({
         req(input$file)
-        tabledb<-getDB(file=input$file$datapath)
-        wholist <- unique(tabledb$who)
+        getDB(file = input$file$datapath)
+    })
+    whogen <- reactive({
+        unique(db()$who)
     })
     observeEvent(whogen(), {
         choices <- whogen()
@@ -107,16 +109,14 @@ server <- function(input, output, session) {
     
     output$ov <- DT::renderDT({
         req(input$file)
-        tabledb<-isolate(getDB(file=input$file$datapath))
+        tabledb<-db()
         colnames(tabledb)<-c("Epoch","Date", "Message","sent(1)/received(0)", "Contact")
         tabledb[2:5]
         })
 
     observeEvent(input$contact,{
-      req(input$file)
       req(input$contact)
-      a<-getDB(file=input$file$datapath)
-      parsed <- parser(a, input$contact)
+      parsed <- parser(db(), input$contact)
       output$name <- renderText({input$contact})
       while (messages_per_contact>0) {
         updateUserMessages("messageStream", 
