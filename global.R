@@ -11,6 +11,7 @@ source("parser.R")
 source("getDB.R")
 source("searchMessages.R")
 source("addressBook.R")
+source("exportHtml.R")
 
 #Options
 options(shiny.maxRequestSize = 20 * 1024^2)

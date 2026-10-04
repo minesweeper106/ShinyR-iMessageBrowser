@@ -83,6 +83,13 @@ body = dashboardBody(
                    
                         )
           ),
+          tabPanel("Export",
+                   box(width = NULL, title = "Export chat as HTML",
+                       solidHeader = TRUE, status = "warning",
+                       p("Saves the conversation with the contact selected in the sidebar",
+                         "as a single, self-contained HTML file (oldest message first)."),
+                       uiOutput("exportInfo"),
+                       downloadButton("exportHtml", "Download HTML"))),
           tabPanel("Search",
                    box(width = NULL, title = "Search messages (all contacts)",
                        solidHeader = TRUE, status = "warning",
@@ -194,6 +201,20 @@ server <- function(input, output, session) {
         })
         userMessages(width = NULL, status = "danger", msgs)
     })
+
+    # Export: single-file HTML of the selected conversation
+    output$exportInfo <- renderUI({
+        if (is.null(input$contact)) return(p(em("Select a contact in the sidebar first.")))
+        p(strong(nameOf(input$contact)), " - ", nrow(parsed()), " messages")
+    })
+    output$exportHtml <- downloadHandler(
+        filename = function() exportFileName(nameOf(req(input$contact))),
+        content = function(file) {
+            writeLines(buildChatHtml(parsed(), nameOf(input$contact), input$contact),
+                       file, useBytes = TRUE)
+        },
+        contentType = "text/html"
+    )
 
     # Keyword search across all contacts, newest first (debounced typing)
     keyword <- debounce(reactive(input$keyword), 400)

@@ -6,6 +6,7 @@ source(file.path(root, "parser.R"))
 source(file.path(root, "getDB.R"))
 source(file.path(root, "searchMessages.R"))
 source(file.path(root, "addressBook.R"))
+source(file.path(root, "exportHtml.R"))
 
 make_fixture <- function() {
   f <- tempfile(fileext = ".db")
