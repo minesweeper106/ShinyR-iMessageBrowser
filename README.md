@@ -96,18 +96,33 @@ Copy the hashed files out of the backup to somewhere convenient and give them re
 
 ## Installation
 
-Requires [R](https://www.r-project.org/) 4.1 or newer.
+Requires [R](https://www.r-project.org/) 4.1 or newer. Run these commands in the R console (or the RStudio console).
+
+### Option 1: install from GitHub (recommended)
+
+This uses the `remotes` package, which installs R packages from GitHub. It is not included with R, so install it first. You only need to do this once; if you already have `remotes`, skip step 1.
 
 ```r
+# 1. Install 'remotes' (once)
 install.packages("remotes")
+
+# 2. Install iMessage Browser from GitHub
 remotes::install_github("minesweeper106/ShinyR-iMessageBrowser")
 ```
 
-Or install a downloaded release file (`imessagebrowser_1.0.0.tar.gz` from the GitHub Releases page):
+The other packages the app needs (`shiny`, `DT`, `RSQLite` and so on) are installed automatically. This can take a few minutes the first time.
+
+### Option 2: install a downloaded release file
+
+Download `imessagebrowser_1.0.0.tar.gz` from the [Releases page](https://github.com/minesweeper106/ShinyR-iMessageBrowser/releases). This route does not install the dependencies for you, so install them first:
 
 ```r
+install.packages(c("shiny", "shinydashboard", "shinydashboardPlus",
+                   "DBI", "RSQLite", "DT", "htmltools"))
 install.packages("imessagebrowser_1.0.0.tar.gz", repos = NULL, type = "source")
 ```
+
+(Give the full path to the file if R's working directory is not the folder it was downloaded to.)
 
 ### Double-click launchers
 
