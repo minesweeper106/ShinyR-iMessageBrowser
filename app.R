@@ -142,7 +142,7 @@ server <- function(input, output, session) {
     # highlighted when names arrive later.
     output$contactItems <- renderUI({
         ch <- contactChoices(contactNames())
-        ch <- ch[order(tolower(names(ch)))]
+        ch <- ch[recentOrder(unname(ch), db())]   # most recent conversation first
         sel <- isolate(input$contact)
         filt <- isolate(input$contactFilter)
         lapply(seq_along(ch), function(i) {
@@ -175,8 +175,8 @@ server <- function(input, output, session) {
     output$handle <- renderText(input$contact)
     output$f <- renderText(nrow(parsed()))
     # parsed() is sorted newest first: first row = last message, last row = first
-    output$firstDate <- renderText(tail(parsed()$xdate, 1))
-    output$lastDate  <- renderText(head(parsed()$xdate, 1))
+    output$firstDate <- renderText(localTime(tail(parsed()$xdate, 1)))
+    output$lastDate  <- renderText(localTime(head(parsed()$xdate, 1)))
 
     # The whole conversation is rendered in one go (a single message to the
     # browser) instead of one updateUserMessages() call per message.
@@ -186,7 +186,7 @@ server <- function(input, output, session) {
             received <- p$sent[i] == 0
             userMessage(
                 author = if (received) nameOf(p$who[i]) else "Me",
-                date   = as.character(p$xdate[i]),
+                date   = localTime(p$xdate[i]),
                 image  = if (received) avatar_received else avatar_sent,
                 type   = if (received) "received" else "sent",
                 # attachments / empty messages have NA text
@@ -217,7 +217,7 @@ server <- function(input, output, session) {
         data.frame(
             Name   = nameOf(res$who),
             Handle = res$who,
-            Date   = res$xdate,
+            Date   = localTime(res$xdate),
             Text   = res$text,
             `Sent/Received` = ifelse(res$sent == 1, "Sent", "Received"),
             check.names = FALSE
