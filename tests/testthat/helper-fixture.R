@@ -4,6 +4,7 @@ library(RSQLite)
 root <- normalizePath(file.path("..", ".."))
 source(file.path(root, "parser.R"))
 source(file.path(root, "getDB.R"))
+source(file.path(root, "searchMessages.R"))
 
 make_fixture <- function() {
   f <- tempfile(fileext = ".db")
