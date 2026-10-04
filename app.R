@@ -16,6 +16,7 @@ ui = dashboardPage(
         minified = FALSE,
         
         fileInput("file","Select backup file", placeholder = "No file selected"),
+        fileInput("abfile","Select Address Book file", placeholder = "No file selected"),
         hr(),
         selectInput("contact", 'Select Contact', choices = NULL)
        
