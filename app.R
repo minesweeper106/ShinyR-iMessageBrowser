@@ -5,7 +5,7 @@ source("global.R")
 
 ui = dashboardPage(
 
-    header = dashboardHeader(title = "iMessage Browser - 0.03",
+    header = dashboardHeader(title = "iMessage Browser - 0.3",
        
         titleWidth = 350
        
