@@ -101,12 +101,6 @@ body = dashboardBody(
         
         
 ),
-#-----------Right Panel
-    controlbar = dashboardControlbar(skin = "dark", controlbarMenu(
-              id = "menu",
-              controlbarItem( "Themes","Change Color theme",br(),hr()),
-              controlbarItem( "Tab 2" )
-    ) ),
     footer= dashboardFooter(left="By minesweeper106",
                             right= socialButton(href = "https://github.com/minesweeper106",icon = icon("github"))
     )
