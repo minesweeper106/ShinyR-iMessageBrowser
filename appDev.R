@@ -32,10 +32,7 @@ body = dashboardBody(
           tabPanel("Chat View", 
                    fluidRow(  
                      box(title = "Chat view",id='messageBox', collapsible = TRUE, collapsed = TRUE,  solidheader = FALSE,  status = "warning", 
-                                    userMessages(
-                                      width = NULL,
-                                      status = "danger",
-                                      id = "messageStream")),
+                                    uiOutput("messageStream")),
                     box(title = "Contact", id='profile', collapsible = TRUE, collapsed = TRUE,
                                     boxProfile(
                                       image = "https://api.dicebear.com/9.x/bottts/svg",
@@ -80,9 +77,6 @@ body = dashboardBody(
 server <- function(input, output, session) {
   
   
-    # Number of messages currently shown in the chat widget (per session)
-    shown <- reactiveVal(0)
-
     db <- reactive({
         req(input$file)
         getDB(file = input$file$datapath)
@@ -117,46 +111,42 @@ server <- function(input, output, session) {
         tabledb[2:5]
         })
 
-    observeEvent(input$contact,{
-      req(input$contact)
-      parsed <- parser(db(), input$contact)
-      output$name <- renderText({input$contact})
-      for (k in rev(seq_len(shown()))) {
-        updateUserMessages("messageStream",
-                         action = "remove", index = k )
-      }
-      f<-0
-      for (i in seq_len(nrow(parsed))) {
-        
-        if (parsed$sent[i] == 0) 
-        {
-          model<-"received"
-          avatar_r<-"https://api.dicebear.com/9.x/bottts/svg"
-        } else {
-          model<-"sent"
-          avatar_r<-"https://media-exp1.licdn.com/dms/image/C4D03AQEKIBvmAlQifw/profile-displayphoto-shrink_100_100/0?e=1606953600&v=beta&t=Sf2xc9Q61iZnZdnFpNQP9-RS6VMCjckt7zNnIaeWDIg"
-        }
-      
-        
-        
-        updateUserMessages("messageStream", 
-                           action = "add", 
-                           content = list(
-                             author = parsed$who[i],
-                             date = as.character(parsed$xdate[i]),
-                             image  = avatar_r,
-                             type = model,
-                             text = parsed$text[i]
-                           ))
-        f<-f+1
-      }
-      output$f<-renderText({f})
-      if (input$messageBox$collapsed) {updateBox("messageBox", 
-                action = "toggle" ) }
-      if (input$profile$collapsed) {updateBox("profile", 
-                action = "toggle" ) }
-      shown(f)
-     
+    # Messages for the selected contact (newest first)
+    parsed <- reactive({
+        req(input$contact)
+        parser(db(), input$contact)
+    })
+
+    output$name <- renderText(input$contact)
+    output$f <- renderText(nrow(parsed()))
+
+    # The whole conversation is rendered in one go (a single message to the
+    # browser) instead of one updateUserMessages() call per message.
+    output$messageStream <- renderUI({
+        p <- parsed()
+        msgs <- lapply(seq_len(nrow(p)), function(i) {
+            received <- p$sent[i] == 0
+            userMessage(
+                author = p$who[i],
+                date   = as.character(p$xdate[i]),
+                image  = if (received) {
+                    "https://api.dicebear.com/9.x/bottts/svg"
+                } else {
+                    "https://media-exp1.licdn.com/dms/image/C4D03AQEKIBvmAlQifw/profile-displayphoto-shrink_100_100/0?e=1606953600&v=beta&t=Sf2xc9Q61iZnZdnFpNQP9-RS6VMCjckt7zNnIaeWDIg"
+                },
+                type   = if (received) "received" else "sent",
+                # attachments / empty messages have NA text
+                if (is.na(p$text[i])) "" else p$text[i]
+            )
+        })
+        userMessages(width = NULL, status = "danger", msgs)
+    })
+
+    # Expand the boxes once a contact is selected
+    observeEvent(input$contact, {
+        req(input$contact)
+        if (isTRUE(input$messageBox$collapsed)) updateBox("messageBox", action = "toggle")
+        if (isTRUE(input$profile$collapsed))    updateBox("profile",    action = "toggle")
     })
 }
 # Run the application
