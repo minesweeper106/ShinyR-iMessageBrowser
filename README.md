@@ -111,7 +111,7 @@ install.packages("imessagebrowser_1.0.0.tar.gz", repos = NULL, type = "source")
 
 ### Double-click launchers
 
-After installing, the `launch/` folder has `iMessageBrowser.command` (macOS) and `iMessageBrowser.bat` (Windows) that start the app without opening R. On macOS you may need to right-click, then Open, the first time. They need `Rscript` to be on your PATH.
+The launchers are not part of the R package. Download them separately from the [Releases page](https://github.com/minesweeper106/ShinyR-iMessageBrowser/releases) or from the [`launch/` folder](https://github.com/minesweeper106/ShinyR-iMessageBrowser/tree/master/launch) in this repository: `iMessageBrowser.command` (macOS) and `iMessageBrowser.bat` (Windows). After installing the package, double-click one to start the app without opening R. R must still be installed, and `Rscript` must be on your PATH. On macOS you may need to right-click and choose Open the first time, and the `.command` file may need `chmod +x iMessageBrowser.command` after downloading.
 
 ## Usage
 
