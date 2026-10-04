@@ -43,9 +43,13 @@ body = dashboardBody(
                                         description = textOutput("f")
                                           ),
                                         boxProfileItem(
-                                        title = "Other",
-                                        description = "N/a"
-                                                      )
+                                        title = "First message",
+                                        description = textOutput("firstDate")
+                                          ),
+                                        boxProfileItem(
+                                        title = "Last message",
+                                        description = textOutput("lastDate")
+                                          )
                                         )
                           )
                    
@@ -104,6 +108,9 @@ server <- function(input, output, session) {
 
     output$name <- renderText(input$contact)
     output$f <- renderText(nrow(parsed()))
+    # parsed() is sorted newest first: first row = last message, last row = first
+    output$firstDate <- renderText(tail(parsed()$xdate, 1))
+    output$lastDate  <- renderText(head(parsed()$xdate, 1))
 
     # The whole conversation is rendered in one go (a single message to the
     # browser) instead of one updateUserMessages() call per message.
