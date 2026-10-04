@@ -31,7 +31,7 @@ body = dashboardBody(
           id = "tabsetView",
           tabPanel("Chat View", 
                    fluidRow(  
-                     box(title = "Chat view",id='messageBox', collapsible = TRUE, collapsed = TRUE,  solidheader = FALSE,  status = "warning", 
+                     box(title = "Chat view",id='messageBox', collapsible = TRUE, collapsed = TRUE,  solidHeader = FALSE,  status = "warning", 
                                     uiOutput("messageStream")),
                     box(title = "Contact", id='profile', collapsible = TRUE, collapsed = TRUE,
                                     boxProfile(
@@ -52,7 +52,7 @@ body = dashboardBody(
                         )
           ),
           tabPanel("Raw Table", 
-                   box(width = NULL, title= "table", solidheader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov')))
+                   box(width = NULL, title= "table", solidHeader = TRUE,collapsible = TRUE, collapsed = TRUE, status = "warning", DT::DTOutput('ov')))
     )
         
         
