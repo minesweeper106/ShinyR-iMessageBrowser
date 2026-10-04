@@ -80,6 +80,9 @@ body = dashboardBody(
 server <- function(input, output, session) {
   
   
+    # Number of messages currently shown in the chat widget (per session)
+    shown <- reactiveVal(0)
+
     db <- reactive({
         req(input$file)
         getDB(file = input$file$datapath)
@@ -118,13 +121,12 @@ server <- function(input, output, session) {
       req(input$contact)
       parsed <- parser(db(), input$contact)
       output$name <- renderText({input$contact})
-      while (messages_per_contact>0) {
-        updateUserMessages("messageStream", 
-                         action = "remove", index = messages_per_contact )
-        messages_per_contact<-messages_per_contact-1
-        }
+      for (k in rev(seq_len(shown()))) {
+        updateUserMessages("messageStream",
+                         action = "remove", index = k )
+      }
       f<-0
-      for (i in 1:nrow(parsed)) {
+      for (i in seq_len(nrow(parsed))) {
         
         if (parsed$sent[i] == 0) 
         {
@@ -153,7 +155,7 @@ server <- function(input, output, session) {
                 action = "toggle" ) }
       if (input$profile$collapsed) {updateBox("profile", 
                 action = "toggle" ) }
-      assign("messages_per_contact", f, envir = .GlobalEnv)
+      shown(f)
      
     })
 }
