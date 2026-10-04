@@ -52,7 +52,7 @@ body = dashboardBody(
                         )
           ),
           tabPanel("Search",
-                   box(width = NULL, title = "Search messages (selected contact)",
+                   box(width = NULL, title = "Search messages (all contacts)",
                        solidHeader = TRUE, status = "warning",
                        textInput("keyword", "Keyword", placeholder = "Type a word or phrase"),
                        DT::DTOutput("searchResults")))
@@ -123,10 +123,10 @@ server <- function(input, output, session) {
         userMessages(width = NULL, status = "danger", msgs)
     })
 
-    # Keyword search within the selected contact's messages (debounced typing)
+    # Keyword search across all contacts, newest first (debounced typing)
     keyword <- debounce(reactive(input$keyword), 400)
     output$searchResults <- DT::renderDT({
-        res <- searchMessages(parsed(), keyword())
+        res <- searchMessages(parser(db()), keyword())
         data.frame(
             Handle = res$who,
             Date   = res$xdate,
