@@ -92,6 +92,23 @@ server <- function(input, output, session) {
     whogen <- reactive({
         unique(db()$who)
     })
+    # Address Book (optional): handle -> friendly name, NA when not matched
+    ab <- reactive({
+        req(input$abfile)
+        tryCatch(getAddressBook(input$abfile$datapath), error = function(e) {
+            showNotification("Could not read the Address Book file", type = "error")
+            NULL
+        })
+    })
+    contactNames <- reactive({
+        handles <- whogen()
+        if (is.null(input$abfile) || is.null(ab())) {
+            data.frame(who = handles, name = NA_character_, stringsAsFactors = FALSE)
+        } else {
+            matchContacts(handles, ab())
+        }
+    })
+
     observeEvent(whogen(), {
         choices <- whogen()
         updateSelectInput(session, "contact", choices = choices)
