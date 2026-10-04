@@ -54,3 +54,18 @@ test_that("duplicate Address Book entries do not duplicate handles", {
   ab <- getAddressBook(make_ab_fixture())
   expect_equal(nrow(matchContacts(c("+442079460958", "+442079460958"), ab)), 2)
 })
+
+test_that("displayName falls back to the handle", {
+  contacts <- data.frame(who = c("+1", "+2", "x@y.z"), name = c("Ann", NA, "Bob"),
+                         stringsAsFactors = FALSE)
+  expect_equal(displayName(c("+2", "+1", "x@y.z", "+9"), contacts),
+               c("+2", "Ann", "Bob", "+9"))
+})
+
+test_that("contactChoices maps labels to handles and disambiguates duplicates", {
+  contacts <- data.frame(who = c("+1", "+2", "+3", "+4"),
+                         name = c("Ann", "Ann", NA, "Cy"), stringsAsFactors = FALSE)
+  ch <- contactChoices(contacts)
+  expect_equal(unname(ch), c("+1", "+2", "+3", "+4"))
+  expect_equal(names(ch), c("Ann (+1)", "Ann (+2)", "+3", "Cy"))
+})

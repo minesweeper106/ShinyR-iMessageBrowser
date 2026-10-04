@@ -61,3 +61,20 @@ matchContacts <- function(handles, ab) {
   }
   data.frame(who = handles, name = name, stringsAsFactors = FALSE)
 }
+
+# Friendly name for each handle in `who`, falling back to the handle itself.
+# `contacts` is the data.frame(who, name) returned by matchContacts().
+displayName <- function(who, contacts) {
+  nm <- contacts$name[match(who, contacts$who)]
+  ifelse(is.na(nm), who, nm)
+}
+
+# Choices for the contact dropdown: values are the handles, labels the friendly
+# names. If two handles share a label (e.g. one person with two numbers), the
+# handle is appended so they stay distinguishable.
+contactChoices <- function(contacts) {
+  label <- displayName(contacts$who, contacts)
+  dup <- label %in% label[duplicated(label)]
+  label[dup] <- paste0(label[dup], " (", contacts$who[dup], ")")
+  stats::setNames(contacts$who, label)
+}
