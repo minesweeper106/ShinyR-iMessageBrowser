@@ -1,7 +1,5 @@
 #Lib dependencies
 library(shiny)
-library(shinyWidgets)
-library(shinythemes)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(dplyr)
