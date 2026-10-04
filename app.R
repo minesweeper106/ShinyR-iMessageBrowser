@@ -148,7 +148,7 @@ server <- function(input, output, session) {
         msgs <- lapply(seq_len(nrow(p)), function(i) {
             received <- p$sent[i] == 0
             userMessage(
-                author = nameOf(p$who[i]),
+                author = if (received) nameOf(p$who[i]) else "Me",
                 date   = as.character(p$xdate[i]),
                 image  = if (received) avatar_received else avatar_sent,
                 type   = if (received) "received" else "sent",
