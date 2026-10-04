@@ -1,0 +1,14 @@
+^renv$
+^renv\.lock$
+^\.Rprofile$
+^.*\.Rproj$
+^\.Rproj\.user$
+^Data$
+^To-do\.Rmd$
+^Knowledge-for-README$
+^LICENSE\.md$
+^\.DS_Store$
+^\.RData$
+^\.Rhistory$
+^README\.Rmd$
+^launch$

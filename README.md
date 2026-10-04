@@ -1,37 +1,139 @@
-# iMessageBrowser
-A simple shiny app that takes an IOS chat.db/sms.db backup file and renders an html chat view.
+# iMessage Browser
 
-_Unpackaged; Just a source code_
+A local [Shiny](https://shiny.posit.co/) app for browsing iMessage backup files.
 
-![Screenshot](https://github.com/minesweeper106/iMessageBrowser_ShinyR/blob/master/Screenshot.jpg)
+## Purpose
 
-## Dependencies
-The following packages need to be installed in your R / RStudio environment
+iPhone backups contain your whole message history, but locked away in raw database files that are hard to read. iMessage Browser opens those files and presents them the way a chat app would, so you can look back through old conversations, find a specific message, or keep a readable copy of a chat, without needing the phone itself.
 
-- shiny
-- shinythemes
-- dplyr
-- DBI
-- RSQLite
+Point it at a message database from an iPhone backup (or a Mac), pick a contact, and read the conversation in a chat-style view, search across all chats, or export a conversation as a single HTML file.
 
-You can install a package by running a command
-`install.packages("package_name")`
+Everything runs on your own machine. Files you select are read locally and nothing is uploaded anywhere.
 
-## How to run
+## What it offers
 
-1. Set the working directory to the location where you cloned or downloaded this repo.
-2. Install any missing packages from the list above
-3. Open app.R
-4. Click _Run app_ in RStudio.
+- **Contact list**: a scrollable, filterable sidebar list of everyone you have messages with, most recent conversation first.
+- **Friendly names**: optionally load an iPhone Address Book file to show names instead of phone numbers / e-mail addresses. Numbers saved without a country code are matched too, when they identify exactly one person.
+- **Chat view**: the conversation with the selected contact, with your messages labelled "Me".
+- **Contact profile**: handle, number of messages, first and last message date.
+- **Export**: download the selected conversation as one self-contained, nicely formatted HTML file (chat bubbles, grouped by day, light/dark aware, printable, no external requests).
+- **Search**: case-insensitive keyword search across all contacts, with results shown in a sortable table.
+- **Local time**: dates and times are shown in the time zone of the machine running the app.
 
-*OR*
+## What it does not do
 
-Assuming that you have all the necessary libraries installed in your R environment, you can simply run this line from your R console:
+- **No attachments**: photos, videos and files are not shown or exported; such messages appear as empty / "(attachment or empty message)".
+- **No group chats as such**: messages without a single contact handle are lumped together under "Unknown / group". Participants and group names are not resolved.
+- **Read-only**: it never modifies your databases, sends messages or deletes anything.
+- **No encrypted backups**: if your iPhone backup is encrypted, the files are unreadable. Make an unencrypted backup, or decrypt it with another tool first.
+- **iPhone Address Book format only**: the Address Book file must be the iOS `AddressBook.sqlitedb`. The Mac `AddressBook-v22.abcddb` uses a different layout and is not supported.
+- **No reactions, edits, read receipts or message threading.**
+- **Text only**: on some newer macOS versions message text can be stored in a form this app does not decode, so some messages from a Mac `chat.db` may appear empty. iPhone backups are the primary use case.
+- **20 MB upload limit** per file (set in `run_app()`, `R/run_app.R`). Larger databases need the limit raised (`shiny.maxRequestSize`).
+- **Not a backup or forensic tool**: no deleted-message recovery, no integrity checks.
 
-`shiny::runGitHub('ShinyR-iMessageBrowser', 'minesweeper106')`
+## Getting the files
 
-## Input file
-The file you'll need is named `3d0d7e5fb2ce288813306e4d4636395e047a3d28` and it's stored somewhere in the backup folder created by ITunes.
+You need the message database, and optionally the Address Book. Work on a **copy**, not the original files.
 
-## Disclaimer
-It is just a stem of a project; a minimum viable code. Over time, it will get more robust and eventually packaged into a release
+### Locating the files
+
+**iPhone backups (iTunes / Finder / Apple Devices app)**
+
+| OS | Backup folder |
+|---|---|
+| macOS | `~/Library/Application Support/MobileSync/Backup/<device-UDID>/` |
+| Windows (iTunes from apple.com) | `%APPDATA%\Apple Computer\MobileSync\Backup\<device-UDID>\` |
+| Windows (iTunes or Apple Devices from Microsoft Store) | `%USERPROFILE%\Apple\MobileSync\Backup\<device-UDID>\` |
+| Linux (libimobiledevice `idevicebackup2`) | No default; whatever directory you pass to the command |
+
+Inside a backup, files are renamed to the SHA-1 hash of `Domain-relativePath` and stored in a subfolder named after the first two characters of the hash:
+
+| Data | Original path on iPhone | File in backup |
+|---|---|---|
+| iMessage/SMS database | `HomeDomain-Library/SMS/sms.db` | `3d/3d0d7e5fb2ce288813306e4d4636395e047a3d28` |
+| Contacts (Address Book) | `HomeDomain-Library/AddressBook/AddressBook.sqlitedb` | `31/31bb7ba8914766d4ba40d6dfb6113c8b614be442` |
+
+`Manifest.db` in the backup root is a SQLite file that maps every hash to its original domain and path. If the backup is encrypted, these files are unreadable without the backup password.
+
+**Live data on a Mac (Messages and Contacts synced via iCloud)**
+
+| Data | Path |
+|---|---|
+| iMessage database | `~/Library/Messages/chat.db` |
+| Message attachments | `~/Library/Messages/Attachments/` |
+| Contacts | `~/Library/Application Support/AddressBook/AddressBook-v22.abcddb` |
+| Contacts per account (iCloud, Exchange, etc.) | `~/Library/Application Support/AddressBook/Sources/<UUID>/AddressBook-v22.abcddb` |
+
+On recent macOS versions, Terminal (or whatever app you use to read these files) needs Full Disk Access (System Settings → Privacy & Security).
+
+> Only the message database and the iPhone-format Address Book work with this app (see limitations above). The Mac contacts files and the attachments folder are listed for reference.
+
+**On the iPhone itself** (only reachable on a jailbroken device or through forensic tools)
+
+The message database is at `/private/var/mobile/Library/SMS/sms.db` and contacts are at `/private/var/mobile/Library/AddressBook/AddressBook.sqlitedb`.
+
+All of these are SQLite databases, so you can also inspect them with `sqlite3` or DB Browser for SQLite.
+
+### Tip
+
+Copy the hashed files out of the backup to somewhere convenient and give them recognisable names, e.g. `sms.db` and `AddressBook.sqlitedb`. The app does not care about file names, only about content.
+
+## Installation
+
+Requires [R](https://www.r-project.org/) 4.1 or newer.
+
+```r
+install.packages("remotes")
+remotes::install_github("minesweeper106/ShinyR-iMessageBrowser")
+```
+
+Or install a downloaded release file (`imessagebrowser_1.0.0.tar.gz` from the GitHub Releases page):
+
+```r
+install.packages("imessagebrowser_1.0.0.tar.gz", repos = NULL, type = "source")
+```
+
+### Double-click launchers
+
+After installing, the `launch/` folder has `iMessageBrowser.command` (macOS) and `iMessageBrowser.bat` (Windows) that start the app without opening R. On macOS you may need to right-click, then Open, the first time. They need `Rscript` to be on your PATH.
+
+## Usage
+
+1. Start the app:
+
+   ```r
+   imessagebrowser::run_app()
+   ```
+
+2. In the sidebar, click **Select backup file** and choose your message database (`sms.db` / `chat.db`).
+3. *(Optional)* Click **Select Address Book file** and choose `AddressBook.sqlitedb` to show names instead of numbers. You can do this before or after picking a contact.
+4. Pick a contact from the list. Use **Filter contacts** to narrow it by name or number.
+5. Use the tabs:
+   - **Chat View**: the conversation and the contact profile.
+   - **Export**: **Download HTML** saves the selected conversation (oldest message first) as `chat-<name>.html`.
+   - **Search**: type a word or phrase to search all conversations.
+
+## Development
+
+The project is an R package. Packages for development are pinned with [renv](https://rstudio.github.io/renv/) (`renv::restore()`).
+
+```r
+pkgload::load_all()                 # load the code
+run_app()                           # start the app
+testthat::test_local()              # run the tests
+```
+
+Build and check: `R CMD build .` then `R CMD check imessagebrowser_1.0.0.tar.gz`.
+
+## Privacy
+
+Message databases are highly personal. The app runs locally and makes no external requests: the avatars are SVG files bundled in `inst/app/www/`. Exported HTML files contain your full conversation text, so store and share them with care.
+
+## Author
+
+[minesweeper106](https://github.com/minesweeper106)
+
+## Licence
+
+MIT, see `LICENSE.md`.
