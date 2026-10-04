@@ -9,9 +9,7 @@ library(DBI)
 library(RSQLite)
 
 #My custom functions
-source("datacalc.R")
 source("parser.R")
-source("generate.R")
 source("getDB.R")
 
 #Options
