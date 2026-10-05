@@ -16,3 +16,4 @@ run_app <- function(launch.browser = TRUE, ...) {
   app <- shiny::shinyApp(ui = app_ui(), server = app_server)
   shiny::runApp(app, launch.browser = launch.browser, ...)
 }
+

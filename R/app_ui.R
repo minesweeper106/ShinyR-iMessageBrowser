@@ -80,6 +80,14 @@ body = dashboardBody(
                    
                         )
           ),
+          tabPanel("Timeline",
+                   box(width = NULL, title = "Communication timeline",
+                       solidHeader = TRUE, status = "warning",
+                       p("One entry per day of conversation with the contact selected",
+                         "in the sidebar (newest first)."),
+                       uiOutput("timelineInfo"),
+                       uiOutput("timelineFeed"),
+                       uiOutput("timelineMore"))),
           tabPanel("Export",
                    box(width = NULL, title = "Export chat as HTML",
                        solidHeader = TRUE, status = "warning",

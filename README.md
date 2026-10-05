@@ -16,6 +16,7 @@ Everything runs on your own machine. Files you select are read locally and nothi
 - **Friendly names**: optionally load an iPhone Address Book file to show names instead of phone numbers / e-mail addresses. Numbers saved without a country code are matched too, when they identify exactly one person.
 - **Chat view**: the conversation with the selected contact, with your messages labelled "Me".
 - **Contact profile**: handle, number of messages, first and last message date.
+- **Timeline**: a day-by-day feed for the selected contact (month headers, time range, sent/received counts and a snippet of the first message each day; newest first, 30 days at a time).
 - **Export**: download the selected conversation as one self-contained, nicely formatted HTML file (chat bubbles, grouped by day, light/dark aware, printable, no external requests).
 - **Search**: case-insensitive keyword search across all contacts, with results shown in a sortable table.
 - **Local time**: dates and times are shown in the time zone of the machine running the app.
@@ -141,6 +142,7 @@ The launchers are not part of the R package. Download them separately from the [
 4. Pick a contact from the list. Use **Filter contacts** to narrow it by name or number.
 5. Use the tabs:
    - **Chat View**: the conversation and the contact profile.
+   - **Timeline**: one entry per day of conversation with the selected contact; **Show older** loads more days.
    - **Export**: **Download HTML** saves the selected conversation (oldest message first) as `chat-<name>.html`.
    - **Search**: type a word or phrase to search all conversations.
 

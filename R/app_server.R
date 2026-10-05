@@ -85,6 +85,31 @@ app_server <- function(input, output, session) {
         userMessages(width = NULL, status = "danger", msgs)
     })
 
+    # Timeline: one entry per day, newest `timelineLimit()` days shown
+    timelinePage <- 30L
+    timelineLimit <- reactiveVal(timelinePage)
+    timelineData <- reactive(buildTimeline(parsed()))
+    observeEvent(input$contact, timelineLimit(timelinePage))
+    observeEvent(input$timelineMore, timelineLimit(timelineLimit() + timelinePage))
+
+    output$timelineInfo <- renderUI({
+        if (is.null(input$contact)) return(p(em("Select a contact in the sidebar first.")))
+        tl <- timelineData()
+        p(strong(nameOf(input$contact)), " - ", nrow(parsed()), " messages on ",
+          nrow(tl), " days")
+    })
+    output$timelineFeed <- renderUI({
+        req(input$contact)
+        tl <- timelineData()
+        if (nrow(tl) == 0) return(p(em("No messages with this contact.")))
+        timelineUI(tl, timelineLimit())
+    })
+    output$timelineMore <- renderUI({
+        req(input$contact)
+        if (nrow(timelineData()) > timelineLimit())
+            actionButton("timelineMore", "Show older")
+    })
+
     # Export: single-file HTML of the selected conversation
     output$exportInfo <- renderUI({
         if (is.null(input$contact)) return(p(em("Select a contact in the sidebar first.")))
